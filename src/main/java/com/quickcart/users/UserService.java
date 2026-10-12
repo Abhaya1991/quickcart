@@ -1,4 +1,4 @@
-package com.quickcart.users.service;
+package com.quickcart.users;
 
 import com.quickcart.users.dto.LoginRequest;
 import com.quickcart.users.dto.RegisterRequest;

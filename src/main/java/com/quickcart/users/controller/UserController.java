@@ -4,7 +4,7 @@ import com.quickcart.users.dto.LoginRequest;
 import com.quickcart.users.dto.RegisterRequest;
 import com.quickcart.users.dto.UserResponse;
 import com.quickcart.users.repository.LoginResponse;
-import com.quickcart.users.service.UserService;
+import com.quickcart.users.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

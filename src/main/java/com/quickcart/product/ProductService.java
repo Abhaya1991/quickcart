@@ -1,4 +1,4 @@
-package com.quickcart.product.service;
+package com.quickcart.product;
 
 import com.quickcart.product.dto.ProductRequest;
 import com.quickcart.product.dto.ProductResponse;
@@ -7,6 +7,10 @@ import com.quickcart.product.mapper.ProductMapper;
 import com.quickcart.product.repository.ProductRepository;
 import com.quickcart.users.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,5 +91,48 @@ public class ProductService {
         product.setActive(false);
 
         productRepository.save(product);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProducts(int page, int size, String sortBy,
+                                             String direction) {
+
+        Sort.Direction sortDirection =
+                "desc".equalsIgnoreCase(direction)
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(sortDirection, sortBy)
+        );
+
+        return productRepository.findByActiveTrue(pageable)
+                .map(productMapper::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> getProductsByCategory(
+            String category,
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
+
+        Sort.Direction sortDirection =
+                "desc".equalsIgnoreCase(direction)
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(
+                page,
+                size,
+                Sort.by(sortDirection, sortBy)
+        );
+
+        return productRepository
+                .findByCategoryIgnoreCaseAndActiveTrue(category, pageable)
+                .map(productMapper::toResponse);
     }
 }
